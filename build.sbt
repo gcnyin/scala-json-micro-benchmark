@@ -5,6 +5,7 @@ ThisBuild / organizationName := "json-micro-benchmark"
 
 val upickleVersion = "1.4.3"
 val circeVersion = "0.14.1"
+val jacksonVersion = "2.13.1"
 
 lazy val root = (project in file("."))
   .settings(
@@ -13,6 +14,8 @@ lazy val root = (project in file("."))
       "io.circe" %% "circe-parser" % circeVersion,
       "io.circe" %% "circe-generic" % circeVersion,
       "com.lihaoyi" %% "upickle" % upickleVersion,
+      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
     ),
   )
   .enablePlugins(JmhPlugin)

@@ -3,6 +3,7 @@
 - circe
 - jackson
 - upickle
+- json4s
 
 Test command:
 

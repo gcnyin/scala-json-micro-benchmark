@@ -1,21 +1,23 @@
-package example
+package com.github.gcnyin.benchmark
 
-import com.fasterxml.jackson.core.`type`.TypeReference
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.github.gcnyin.benchmark.models.User
 import io.circe.generic.auto._
-import io.circe.parser._
 import io.circe.syntax._
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 import upickle.default._
+import org.json4s.NoTypeHints
+import org.json4s.native.Serialization
+import org.json4s.native.Serialization.{write => jWrite}
 
 @State(Scope.Benchmark)
-class HelloWorld {
+class JsonSerializationTest {
   val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
-  val user: User = User("Zhang san", 23, "Beijing, China", "China")
+  val user: User = User("Zhang san", 23, "Beijing, China", "China", Option("Shanghai"), 1234.56, Option.empty)
 
-  val json = """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China"}"""
+  implicit val formats = Serialization.formats(NoTypeHints)
 
   @Benchmark
   def circeSerialization(): Unit = {
@@ -33,17 +35,7 @@ class HelloWorld {
   }
 
   @Benchmark
-  def circeParse(): Unit = {
-    decode[User](json)
-  }
-
-  @Benchmark
-  def upickleParse(): Unit = {
-    read[User](json)
-  }
-
-  @Benchmark
-  def jacksonParse(): Unit = {
-    mapper.readValue(json, new TypeReference[User] {})
+  def json4sSerialization(): Unit = {
+    jWrite(user)
   }
 }

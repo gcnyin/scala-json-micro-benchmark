@@ -26,8 +26,16 @@ class JsonSerialization {
   }
 
   @Benchmark
-  def upickle(): Unit = {
+  def upickleJson(): Unit = {
     write(user)
+  }
+
+  /**
+    * not json, for reference only
+    */
+  @Benchmark
+  def upickleMessagePack(): Unit = {
+    writeBinary(user)
   }
 
   @Benchmark

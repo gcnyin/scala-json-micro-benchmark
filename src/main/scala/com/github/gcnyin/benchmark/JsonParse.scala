@@ -7,7 +7,7 @@ import com.github.gcnyin.benchmark.models.User
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
-import upickle.default.read
+import upickle.default.{read, readBinary, writeBinary}
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 import org.json4s.native.Serialization.{read => jRead}
@@ -15,15 +15,19 @@ import play.api.libs.json.Json
 
 @State(Scope.Benchmark)
 class JsonParse {
+  implicit val formats = Serialization.formats(NoTypeHints)
+
   val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
   val json =
     """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China","base":"Shanghai","salary":1234.56}"""
 
-  val upickleJson =
+  val upickleJsonString =
     """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China","base":["Shanghai"],"salary":1234.56,"favoriteFruit":[]}"""
 
-  implicit val formats = Serialization.formats(NoTypeHints)
+  val user: User = User("Zhang san", 23, "Beijing, China", "China", Option("Shanghai"), 1234.56, Option.empty)
+
+  val upickleMessagePackValue = writeBinary(user)
 
   @Benchmark
   def circe(): Unit = {
@@ -31,8 +35,16 @@ class JsonParse {
   }
 
   @Benchmark
-  def upickle(): Unit = {
-    read[User](upickleJson)
+  def upickleJson(): Unit = {
+    read[User](upickleJsonString)
+  }
+
+  /**
+    * not json, for reference only
+    */
+  @Benchmark
+  def upickleMessagePack(): Unit = {
+    readBinary[User](upickleMessagePackValue)
   }
 
   @Benchmark
@@ -47,6 +59,6 @@ class JsonParse {
 
   @Benchmark
   def playJson(): Unit = {
-    Json.fromJson[User](Json.parse(json))    
+    Json.fromJson[User](Json.parse(json))
   }
 }

@@ -2,54 +2,64 @@ package com.github.gcnyin.benchmark
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.github.gcnyin.benchmark.models.User
-import io.circe.generic.auto._
-import io.circe.syntax._
-import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
-import upickle.default._
-import org.json4s.NoTypeHints
+import com.github.gcnyin.benchmark.models.User.default
 import org.json4s.native.Serialization
-import org.json4s.native.Serialization.{write => jWrite}
-import play.api.libs.json.Json
+import org.json4s.{Formats, NoTypeHints}
+import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 
 @State(Scope.Benchmark)
 class JsonSerialization {
   val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
-  val user: User = User("Zhang san", 23, "Beijing, China", "China", Option("Shanghai"), 1234.56, Option.empty)
-
-  implicit val formats = Serialization.formats(NoTypeHints)
+  implicit val formats: Formats = Serialization.formats(NoTypeHints)
 
   @Benchmark
   def circe(): Unit = {
-    user.asJson.noSpaces
+    import io.circe.generic.auto._
+    import io.circe.syntax._
+
+    default.asJson.noSpaces
   }
 
   @Benchmark
   def upickleJson(): Unit = {
-    write(user)
+    import upickle.default.write
+
+    write(default)
   }
 
-  /**
-    * not json, for reference only
+  /** not json, for reference only
     */
   @Benchmark
   def upickleMessagePack(): Unit = {
-    writeBinary(user)
+    import upickle.default.writeBinary
+
+    writeBinary(default)
   }
 
   @Benchmark
   def jackson(): Unit = {
-    mapper.writeValueAsString(user)
+    mapper.writeValueAsString(default)
   }
 
   @Benchmark
   def json4sNative(): Unit = {
-    jWrite(user)
+    import org.json4s.native.Serialization.write
+
+    write(default)
   }
 
   @Benchmark
   def playJson(): Unit = {
-    Json.toJson(user).toString()
+    import play.api.libs.json.Json
+
+    Json.toJson(default).toString()
+  }
+
+  @Benchmark
+  def sprayJson(): Unit = {
+    import spray.json._
+
+    default.toJson.toString
   }
 }

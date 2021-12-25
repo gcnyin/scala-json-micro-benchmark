@@ -3,23 +3,18 @@ ThisBuild / version := "0.1.0"
 ThisBuild / organization := "com.github.gcnyin"
 ThisBuild / organizationName := "json-micro-benchmark"
 
-val upickleVersion = "1.4.3"
-val circeVersion = "0.14.1"
-val jacksonVersion = "2.13.1"
-val json4sVersion = "4.0.3"
-val playJsonVersion = "2.9.2"
-
 lazy val root = (project in file("."))
   .settings(
     name := "json-micro-benchmark",
     libraryDependencies ++= Seq(
-      "io.circe" %% "circe-parser" % circeVersion,
-      "io.circe" %% "circe-generic" % circeVersion,
-      "com.lihaoyi" %% "upickle" % upickleVersion,
-      "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
-      "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
-      "org.json4s" %% "json4s-native" % json4sVersion,
-      "com.typesafe.play" %% "play-json" % playJsonVersion,
+      "io.circe" %% "circe-parser" % "0.14.1",
+      "io.circe" %% "circe-generic" % "0.14.1",
+      "com.lihaoyi" %% "upickle" % "1.4.3",
+      "com.fasterxml.jackson.core" % "jackson-databind" % "2.13.1",
+      "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.13.1",
+      "org.json4s" %% "json4s-native" % "4.0.3",
+      "com.typesafe.play" %% "play-json" % "2.9.2",
+      "io.spray" %%  "spray-json" % "1.3.6",
       "org.scalatest" %% "scalatest" % "3.2.10" % Test
     ),
   )

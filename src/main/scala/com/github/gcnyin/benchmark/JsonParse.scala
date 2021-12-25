@@ -1,64 +1,74 @@
 package com.github.gcnyin.benchmark
 
-import com.fasterxml.jackson.core.`type`.TypeReference
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.github.gcnyin.benchmark.models.User
-import io.circe.generic.auto._
-import io.circe.parser.decode
-import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
-import upickle.default.{read, readBinary, writeBinary}
-import org.json4s.NoTypeHints
+import com.github.gcnyin.benchmark.models.User.default
 import org.json4s.native.Serialization
-import org.json4s.native.Serialization.{read => jRead}
+import org.json4s.{Formats, NoTypeHints}
+import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 import play.api.libs.json.Json
+import upickle.default.{write, writeBinary}
 
 @State(Scope.Benchmark)
 class JsonParse {
-  implicit val formats = Serialization.formats(NoTypeHints)
+  implicit val formats: Formats = Serialization.formats(NoTypeHints)
 
   val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
-  val json =
-    """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China","base":"Shanghai","salary":1234.56}"""
+  val json: String = Json.toJson(default).toString()
 
-  val upickleJsonString =
-    """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China","base":["Shanghai"],"salary":1234.56,"favoriteFruit":[]}"""
+  val upickleJsonString: String = write(default)
 
-  val user: User = User("Zhang san", 23, "Beijing, China", "China", Option("Shanghai"), 1234.56, Option.empty)
-
-  val upickleMessagePackValue = writeBinary(user)
+  val upickleMessagePackValue: Array[Byte] = writeBinary(default)
 
   @Benchmark
   def circe(): Unit = {
+    import io.circe.generic.auto._
+    import io.circe.parser.decode
+
     decode[User](json)
   }
 
   @Benchmark
   def upickleJson(): Unit = {
+    import upickle.default.read
+
     read[User](upickleJsonString)
   }
 
-  /**
-    * not json, for reference only
+  /** not json, for reference only
     */
   @Benchmark
   def upickleMessagePack(): Unit = {
+    import upickle.default.readBinary
+
     readBinary[User](upickleMessagePackValue)
   }
 
   @Benchmark
   def jackson(): Unit = {
+    import com.fasterxml.jackson.core.`type`.TypeReference
+
     mapper.readValue(json, new TypeReference[User] {})
   }
 
   @Benchmark
   def json4sNative(): Unit = {
-    jRead[User](json)
+    import org.json4s.native.Serialization.read
+
+    read[User](json)
   }
 
   @Benchmark
   def playJson(): Unit = {
     Json.fromJson[User](Json.parse(json))
+  }
+
+  @Benchmark
+  def sprayJson(): Unit = {
+    import spray.json._
+
+    json.parseJson.convertTo[User]
   }
 }

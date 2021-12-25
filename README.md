@@ -4,6 +4,7 @@
 - jackson
 - upickle
 - json4s
+- spray
 
 Test command:
 

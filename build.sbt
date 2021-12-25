@@ -7,6 +7,7 @@ val upickleVersion = "1.4.3"
 val circeVersion = "0.14.1"
 val jacksonVersion = "2.13.1"
 val json4sVersion = "4.0.3"
+val playJsonVersion = "2.9.2"
 
 lazy val root = (project in file("."))
   .settings(
@@ -18,6 +19,7 @@ lazy val root = (project in file("."))
       "com.fasterxml.jackson.core" % "jackson-databind" % jacksonVersion,
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % jacksonVersion,
       "org.json4s" %% "json4s-native" % json4sVersion,
+      "com.typesafe.play" %% "play-json" % playJsonVersion,
       "org.scalatest" %% "scalatest" % "3.2.10" % Test
     ),
   )

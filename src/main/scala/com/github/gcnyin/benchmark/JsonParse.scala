@@ -11,36 +11,42 @@ import upickle.default.read
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 import org.json4s.native.Serialization.{read => jRead}
+import play.api.libs.json.Json
 
 @State(Scope.Benchmark)
-class JsonParseTest {
+class JsonParse {
   val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
   val json =
     """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China","base":"Shanghai","salary":1234.56}"""
 
   val upickleJson =
-    """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China","base":["Shanghai"],"salary":1234.56,"favouriteFruit":[]}"""
+    """{"name":"Zhang san","age":23,"address":"Beijing, China","country":"China","base":["Shanghai"],"salary":1234.56,"favoriteFruit":[]}"""
 
   implicit val formats = Serialization.formats(NoTypeHints)
 
   @Benchmark
-  def circeParse(): Unit = {
+  def circe(): Unit = {
     decode[User](json)
   }
 
   @Benchmark
-  def upickleParse(): Unit = {
+  def upickle(): Unit = {
     read[User](upickleJson)
   }
 
   @Benchmark
-  def jacksonParse(): Unit = {
+  def jackson(): Unit = {
     mapper.readValue(json, new TypeReference[User] {})
   }
 
   @Benchmark
-  def json4sParse(): Unit = {
+  def json4sNative(): Unit = {
     jRead[User](json)
+  }
+
+  @Benchmark
+  def playJson(): Unit = {
+    Json.fromJson[User](Json.parse(json))    
   }
 }

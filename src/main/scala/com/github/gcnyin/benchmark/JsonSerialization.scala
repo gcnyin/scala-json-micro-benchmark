@@ -10,9 +10,10 @@ import upickle.default._
 import org.json4s.NoTypeHints
 import org.json4s.native.Serialization
 import org.json4s.native.Serialization.{write => jWrite}
+import play.api.libs.json.Json
 
 @State(Scope.Benchmark)
-class JsonSerializationTest {
+class JsonSerialization {
   val mapper: JsonMapper = JsonMapper.builder().addModule(DefaultScalaModule).build()
 
   val user: User = User("Zhang san", 23, "Beijing, China", "China", Option("Shanghai"), 1234.56, Option.empty)
@@ -20,22 +21,27 @@ class JsonSerializationTest {
   implicit val formats = Serialization.formats(NoTypeHints)
 
   @Benchmark
-  def circeSerialization(): Unit = {
+  def circe(): Unit = {
     user.asJson.noSpaces
   }
 
   @Benchmark
-  def upickleSerialization(): Unit = {
+  def upickle(): Unit = {
     write(user)
   }
 
   @Benchmark
-  def jacksonSerialization(): Unit = {
+  def jackson(): Unit = {
     mapper.writeValueAsString(user)
   }
 
   @Benchmark
-  def json4sSerialization(): Unit = {
+  def json4sNative(): Unit = {
     jWrite(user)
+  }
+
+  @Benchmark
+  def playJson(): Unit = {
+    Json.toJson(user).toString()
   }
 }

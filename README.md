@@ -5,6 +5,7 @@
 - upickle
 - json4s
 - spray
+- zio-json
 
 Test command:
 

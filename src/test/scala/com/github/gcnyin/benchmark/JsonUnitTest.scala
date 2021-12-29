@@ -16,7 +16,6 @@ class JsonUnitTest extends AnyFlatSpec with Matchers {
 
   val upickleJson: String = write(default)
 
-
   "upickle" should "parse user" in {
     import upickle.default.read
 
@@ -50,5 +49,19 @@ class JsonUnitTest extends AnyFlatSpec with Matchers {
 
     val user: User = j.parseJson.convertTo[User]
     user should be(default)
+  }
+
+  "zio-json" should "parse user" in {
+    import zio.json._
+
+    val either = json.fromJson[User]
+    either should be(Right(default))
+  }
+
+  "zio-json" should "stringify user" in {
+    import zio.json._
+
+    val either = default.toJson.fromJson[User]
+    either should be(Right(default))
   }
 }

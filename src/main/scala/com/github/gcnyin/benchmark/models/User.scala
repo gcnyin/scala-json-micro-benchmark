@@ -1,5 +1,7 @@
 package com.github.gcnyin.benchmark.models
 
+import zio.json.{DeriveJsonEncoder, JsonEncoder}
+
 case class User(
     name: String,
     age: Int,
@@ -24,12 +26,16 @@ object User {
   )
 
   import upickle.default.{ReadWriter, macroRW}
-  implicit val rw: ReadWriter[User] = macroRW
+  implicit val upickleRW: ReadWriter[User] = macroRW
 
   import play.api.libs.json.{Format, Json}
-  implicit val format: Format[User] = Json.format[User]
+  implicit val playJsonFormat: Format[User] = Json.format[User]
 
   import spray.json.DefaultJsonProtocol._
   import spray.json.RootJsonFormat
-  implicit val rootJsonFormat: RootJsonFormat[User] = jsonFormat8(User.apply)
+  implicit val sprayFormat: RootJsonFormat[User] = jsonFormat8(User.apply)
+
+  import zio.json.{DeriveJsonDecoder, JsonDecoder}
+  implicit val zioJsonDecoder: JsonDecoder[User] = DeriveJsonDecoder.gen[User]
+  implicit val zioJsonEncoder: JsonEncoder[User] = DeriveJsonEncoder.gen[User]
 }

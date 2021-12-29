@@ -71,4 +71,11 @@ class JsonParse {
 
     json.parseJson.convertTo[User]
   }
+
+  @Benchmark
+  def zioJson(): Unit = {
+    import zio.json._
+
+    json.fromJson[User]
+  }
 }

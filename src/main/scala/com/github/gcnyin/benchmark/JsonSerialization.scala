@@ -62,4 +62,11 @@ class JsonSerialization {
 
     default.toJson.toString
   }
+
+  @Benchmark
+  def zioJson(): Unit = {
+    import zio.json._
+
+    default.toJson
+  }
 }

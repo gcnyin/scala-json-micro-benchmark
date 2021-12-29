@@ -15,6 +15,7 @@ lazy val root = (project in file("."))
       "org.json4s" %% "json4s-native" % "4.0.3",
       "com.typesafe.play" %% "play-json" % "2.9.2",
       "io.spray" %%  "spray-json" % "1.3.6",
+      "dev.zio" %% "zio-json" % "0.2.0-M3",
       "org.scalatest" %% "scalatest" % "3.2.10" % Test
     ),
   )

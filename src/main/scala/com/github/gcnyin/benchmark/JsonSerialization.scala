@@ -69,4 +69,11 @@ class JsonSerialization {
 
     default.toJson
   }
+
+  @Benchmark
+  def jsoniter(): Unit = {
+    import com.github.plokhotnyuk.jsoniter_scala.core._
+
+    writeToArray(default)
+  }
 }

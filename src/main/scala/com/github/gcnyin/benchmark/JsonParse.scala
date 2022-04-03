@@ -78,4 +78,11 @@ class JsonParse {
 
     json.fromJson[User]
   }
+
+  @Benchmark
+  def jsoniter(): Unit = {
+    import com.github.plokhotnyuk.jsoniter_scala.core._
+
+    readFromArray[User](json.getBytes("UTF-8"))
+  }
 }

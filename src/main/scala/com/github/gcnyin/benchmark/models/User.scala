@@ -38,4 +38,8 @@ object User {
   import zio.json.{DeriveJsonDecoder, JsonDecoder}
   implicit val zioJsonDecoder: JsonDecoder[User] = DeriveJsonDecoder.gen[User]
   implicit val zioJsonEncoder: JsonEncoder[User] = DeriveJsonEncoder.gen[User]
+
+  import com.github.plokhotnyuk.jsoniter_scala.core._
+  import com.github.plokhotnyuk.jsoniter_scala.macros._
+  implicit val jsoniterCodec: JsonValueCodec[User] = JsonCodecMaker.make
 }

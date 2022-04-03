@@ -6,6 +6,7 @@
 - json4s
 - spray
 - zio-json
+- jsoniter
 
 Test command:
 

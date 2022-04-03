@@ -64,4 +64,20 @@ class JsonUnitTest extends AnyFlatSpec with Matchers {
     val either = default.toJson.fromJson[User]
     either should be(Right(default))
   }
+
+  "jsoniter" should "parse user" in {
+    import models.User._
+    import com.github.plokhotnyuk.jsoniter_scala.core._
+
+    readFromArray(json.getBytes("UTF-8"))
+  }
+
+  "jsoniter" should "stringify user" in {
+    import models.User._
+    import com.github.plokhotnyuk.jsoniter_scala.core._
+
+    val jsonBytes: Array[Byte] = writeToArray(User.default)
+    val user: User = readFromArray(jsonBytes)
+    user should be(default)
+  }
 }

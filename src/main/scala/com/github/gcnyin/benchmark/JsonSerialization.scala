@@ -28,15 +28,6 @@ class JsonSerialization {
     write(default)
   }
 
-  /** not json, for reference only
-    */
-  @Benchmark
-  def upickleMessagePack(): Unit = {
-    import upickle.default.writeBinary
-
-    writeBinary(default)
-  }
-
   @Benchmark
   def jackson(): Unit = {
     mapper.writeValueAsString(default)

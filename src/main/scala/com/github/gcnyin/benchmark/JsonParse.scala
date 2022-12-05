@@ -20,8 +20,6 @@ class JsonParse {
 
   val upickleJsonString: String = write(default)
 
-  val upickleMessagePackValue: Array[Byte] = writeBinary(default)
-
   @Benchmark
   def circe(): Unit = {
     import io.circe.generic.auto._
@@ -35,15 +33,6 @@ class JsonParse {
     import upickle.default.read
 
     read[User](upickleJsonString)
-  }
-
-  /** not json, for reference only
-    */
-  @Benchmark
-  def upickleMessagePack(): Unit = {
-    import upickle.default.readBinary
-
-    readBinary[User](upickleMessagePackValue)
   }
 
   @Benchmark

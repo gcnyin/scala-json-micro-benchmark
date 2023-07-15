@@ -1,4 +1,4 @@
-package com.github.gcnyin.benchmark.models
+package example.models
 
 import zio.json.{DeriveJsonEncoder, JsonEncoder}
 

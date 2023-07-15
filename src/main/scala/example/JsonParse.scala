@@ -1,14 +1,14 @@
-package com.github.gcnyin.benchmark
+package example
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.github.gcnyin.benchmark.models.User
-import com.github.gcnyin.benchmark.models.User.default
+import example.models.User
+import example.models.User.default
 import org.json4s.native.Serialization
 import org.json4s.{Formats, NoTypeHints}
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
 import play.api.libs.json.Json
-import upickle.default.{write, writeBinary}
+import upickle.default.write
 
 @State(Scope.Benchmark)
 class JsonParse {

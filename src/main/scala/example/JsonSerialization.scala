@@ -1,8 +1,8 @@
-package com.github.gcnyin.benchmark
+package example
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.github.gcnyin.benchmark.models.User.default
+import example.models.User.default
 import org.json4s.native.Serialization
 import org.json4s.{Formats, NoTypeHints}
 import org.openjdk.jmh.annotations.{Benchmark, Scope, State}
